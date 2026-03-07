@@ -3,6 +3,8 @@ package com.br.customerservice.data.repository;
 import com.br.customerservice.data.dao.CustomerDao;
 import com.br.customerservice.model.entity.CustomerEntity;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,5 +15,9 @@ public class CustomerRepository {
 
     public CustomerEntity save(CustomerEntity customerEntity) {
         return dao.save(customerEntity);
+    }
+
+    public Page<CustomerEntity> findAllPaginated(Pageable pageable) {
+        return dao.findAll(pageable);
     }
 }

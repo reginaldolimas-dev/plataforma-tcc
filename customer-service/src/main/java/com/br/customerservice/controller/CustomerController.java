@@ -3,8 +3,9 @@ package com.br.customerservice.controller;
 import com.br.customerservice.model.entity.CustomerEntity;
 import com.br.customerservice.service.CustomerService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,13 +20,13 @@ public class CustomerController {
     private final CustomerService service;
 
     @GetMapping
-    public CustomerEntity buscarPaginado(Pageable pageable) {
-        return null;
+    public ResponseEntity<Page<CustomerEntity>> findAllPaginated(Pageable pageable) {
+        return ResponseEntity.ok(service.findAllPaginated(pageable));
     }
 
     @PostMapping
-    public CustomerEntity save(@RequestBody CustomerEntity customerEntity) {
-        return service.save(customerEntity);
+    public ResponseEntity<CustomerEntity> save(@RequestBody CustomerEntity customerEntity) {
+        return ResponseEntity.ok(service.save(customerEntity));
     }
 
 }
