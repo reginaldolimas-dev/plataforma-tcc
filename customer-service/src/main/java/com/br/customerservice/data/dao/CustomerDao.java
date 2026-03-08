@@ -7,14 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 
 @Repository
 public interface CustomerDao extends JpaRepository<CustomerEntity, Long> {
-
-    Page<CustomerResumeDTO> findAllBy(Pageable pageable);
 
     @Query(value = """
             SELECT
@@ -40,11 +39,19 @@ public interface CustomerDao extends JpaRepository<CustomerEntity, Long> {
             (:name, :surname, :email, :birthDate, :active)
             """, nativeQuery = true)
     void insertCustomer(
-            String name,
-            String surname,
-            String email,
-            LocalDate birthDate,
-            boolean active
+            @Param("name") String name,
+            @Param("surname") String surname,
+            @Param("email") String email,
+            @Param("birthDate") LocalDate birthDate,
+            @Param("active") boolean active
     );
+
+    @Modifying
+    @Query(value = """
+            UPDATE customer
+            SET active = false
+            WHERE id = :id
+            """, nativeQuery = true)
+    void softDeleteById(@Param("id") Long id);
 
 }

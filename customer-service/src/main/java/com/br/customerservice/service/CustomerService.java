@@ -23,4 +23,9 @@ public class CustomerService {
     public Page<CustomerResumeDTO> findAllPaginated(Pageable pageable) {
         return repository.findAllPaginated(pageable);
     }
+
+    @Transactional
+    public void delete(Long id) {
+        repository.delete(id);
+    }
 }

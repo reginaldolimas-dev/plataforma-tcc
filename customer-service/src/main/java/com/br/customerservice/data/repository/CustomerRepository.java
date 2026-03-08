@@ -27,4 +27,8 @@ public class CustomerRepository {
     public Page<CustomerResumeDTO> findAllPaginated(Pageable pageable) {
         return dao.findAllPaginated(pageable);
     }
+
+    public void delete(Long id) {
+        dao.softDeleteById(id);
+    }
 }
