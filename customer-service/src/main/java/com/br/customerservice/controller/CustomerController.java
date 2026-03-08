@@ -1,7 +1,7 @@
 package com.br.customerservice.controller;
 
+import com.br.customerservice.dto.CustomerCreateDTO;
 import com.br.customerservice.dto.CustomerResumeDTO;
-import com.br.customerservice.model.entity.CustomerEntity;
 import com.br.customerservice.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,8 +26,9 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerEntity> save(@RequestBody CustomerEntity customerEntity) {
-        return ResponseEntity.ok(service.save(customerEntity));
+    public ResponseEntity<Void> save(@RequestBody CustomerCreateDTO customer) {
+        service.save(customer);
+        return ResponseEntity.ok().build();
     }
 
 }

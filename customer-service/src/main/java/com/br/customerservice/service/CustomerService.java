@@ -1,8 +1,9 @@
 package com.br.customerservice.service;
 
 import com.br.customerservice.data.repository.CustomerRepository;
+import com.br.customerservice.dto.CustomerCreateDTO;
 import com.br.customerservice.dto.CustomerResumeDTO;
-import com.br.customerservice.model.entity.CustomerEntity;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +15,9 @@ public class CustomerService {
 
     private final CustomerRepository repository;
 
-
-    public CustomerEntity save(CustomerEntity customerEntity) {
-        return repository.save(customerEntity);
+    @Transactional
+    public void save(CustomerCreateDTO customer) {
+        repository.save(customer);
     }
 
     public Page<CustomerResumeDTO> findAllPaginated(Pageable pageable) {
