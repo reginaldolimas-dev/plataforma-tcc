@@ -1,6 +1,7 @@
 package com.br.customerservice.service;
 
 import com.br.customerservice.data.repository.CustomerRepository;
+import com.br.customerservice.dto.CustomerResumeDTO;
 import com.br.customerservice.model.entity.CustomerEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ public class CustomerService {
         return repository.save(customerEntity);
     }
 
-    public Page<CustomerEntity> findAllPaginated(Pageable pageable) {
+    public Page<CustomerResumeDTO> findAllPaginated(Pageable pageable) {
         return repository.findAllPaginated(pageable);
     }
 }

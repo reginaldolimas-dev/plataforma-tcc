@@ -1,5 +1,6 @@
 package com.br.customerservice.controller;
 
+import com.br.customerservice.dto.CustomerResumeDTO;
 import com.br.customerservice.model.entity.CustomerEntity;
 import com.br.customerservice.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ public class CustomerController {
     private final CustomerService service;
 
     @GetMapping
-    public ResponseEntity<Page<CustomerEntity>> findAllPaginated(Pageable pageable) {
+    public ResponseEntity<Page<CustomerResumeDTO>> findAllPaginated(Pageable pageable) {
         return ResponseEntity.ok(service.findAllPaginated(pageable));
     }
 
