@@ -3,7 +3,8 @@ package com.br.productservice.data.repository;
 import com.br.productservice.data.dao.ProductDao;
 import com.br.productservice.dto.ProductCreateDTO;
 import com.br.productservice.dto.ProductResumeDTO;
-import com.br.productservice.dto.ProductUpdateDTO;
+import com.br.productservice.model.entity.ProductEntity;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +28,7 @@ public class ProductRepository {
         );
     }
 
-    public void updateProduct(ProductUpdateDTO product) {
+    public void updateProduct(ProductEntity product) {
         dao.updateProduct(
                 product.getId(),
                 product.getName(),
@@ -35,5 +36,9 @@ public class ProductRepository {
                 product.getPrice(),
                 product.getQuantity()
         );
+    }
+
+    public ProductEntity findById(Long id) {
+        return dao.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found"));
     }
 }
