@@ -36,7 +36,7 @@ public interface ProductDao extends JpaRepository<ProductEntity, Long> {
             SET name = :name,
                 description = :description,
                 price = :price,
-                quantity = :quantity,
+                quantity = :quantity
             WHERE id = :id
             """, nativeQuery = true)
     void updateProduct(

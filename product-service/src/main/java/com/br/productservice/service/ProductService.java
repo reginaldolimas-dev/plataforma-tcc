@@ -34,6 +34,7 @@ public class ProductService {
         return repository.findById(id);
     }
 
+    @Transactional
     public void updateProduct(ProductUpdateDTO product) {
         if (product.getId() == null) {
             throw new IllegalArgumentException("Product ID cannot be null");
