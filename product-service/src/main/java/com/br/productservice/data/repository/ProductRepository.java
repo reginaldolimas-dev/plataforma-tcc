@@ -18,15 +18,22 @@ public class ProductRepository {
         return dao.findAllPaginated(pageable);
     }
 
-    public void save(ProductCreateDTO product) {
-        dao.saveProduct(product);
+    public void saveProduct(ProductCreateDTO product) {
+        dao.saveProduct(
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getQuantity()
+        );
     }
 
-    public void delete(Long id) {
-        dao.deleteById(id);
-    }
-
-    public void update(ProductUpdateDTO product) {
-        dao.update(product);
+    public void updateProduct(ProductUpdateDTO product) {
+        dao.updateProduct(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getQuantity()
+        );
     }
 }

@@ -1,19 +1,64 @@
 package com.br.productservice.data.dao;
 
-import com.br.productservice.dto.ProductCreateDTO;
 import com.br.productservice.dto.ProductResumeDTO;
-import com.br.productservice.dto.ProductUpdateDTO;
 import com.br.productservice.model.entity.ProductEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductDao extends JpaRepository<ProductEntity, Long> {
+
+    @Query(value = """
+            SELECT
+                p.id as id,
+                p.name  as name,
+                p.description as description,
+                p.price as price,
+                p.quantity as quantity,
+                p.createdAt as createdAt,
+                p.updatedAt as updatedAt         
+                FROM product p
+            """,
+            countQuery = """
+                            SELECT count(*) FROM product p
+                            """,
+            nativeQuery = true)
     Page<ProductResumeDTO> findAllPaginated(Pageable pageable);
 
-    void update(ProductUpdateDTO product);
+    @Modifying
+    @Query(value = """
+            UPDATE product
+            SET name = :name,
+                description = :description,
+                price = :price,
+                quantity = :quantity,
+            WHERE id = :id
+            """, nativeQuery = true)
+    void updateProduct(
+            @Param("id") Long id,
+            @Param("name") String name,
+            @Param("description") String description,
+            @Param("price") Double price,
+            @Param("quantity") Integer quantity
+    );
 
-    void saveProduct(ProductCreateDTO product);
+    @Modifying
+    @Query(value = """
+        INSERT INTO product
+        (name, description, price, quantity)
+        VALUES
+        (:name, :description, :price, :quantity)
+        """, nativeQuery = true)
+    void saveProduct(
+            @Param("name") String name,
+            @Param("description") String description,
+            @Param("price") Double price,
+            @Param("quantity") Integer quantity
+    );
+
 }

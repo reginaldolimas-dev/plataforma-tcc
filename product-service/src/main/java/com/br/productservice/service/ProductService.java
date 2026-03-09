@@ -18,15 +18,11 @@ public class ProductService {
         return repository.findAllPaginated(pageable);
     }
 
-    public void save(ProductCreateDTO product) {
-        repository.save(product);
+    public void saveProduct(ProductCreateDTO product) {
+        repository.saveProduct(product);
     }
 
-    public void delete(Long id) {
-        repository.delete(id);
-    }
-
-    public void update(ProductUpdateDTO product) {
-        repository.update(product);
+    public void updateProduct(ProductUpdateDTO product) {
+        repository.updateProduct(product);
     }
 }
