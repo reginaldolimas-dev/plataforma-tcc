@@ -46,7 +46,7 @@ public class CustomerService {
 
     @Transactional
     public void update(CustomerUpdateDTO customer) {
-        CustomerEntity existingCustomer = repository.findById(customer.getId());
+        CustomerEntity existingCustomer = findById(customer.getId());
 
         CustomerEntity entity = updateEntity(customer, existingCustomer);
 
