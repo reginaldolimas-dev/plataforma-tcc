@@ -30,7 +30,10 @@ public class CustomerService {
     }
 
     public Page<CustomerResumeDTO> findAllPaginated(Pageable pageable) {
-        return repository.findAllPaginated(pageable);
+        log.info("Finding all customers paginated");
+        Page<CustomerResumeDTO> modelos = repository.findAllPaginated(pageable);
+        log.info("Customers found");
+        return modelos;
     }
 
     @Transactional
