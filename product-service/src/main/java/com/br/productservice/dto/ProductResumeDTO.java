@@ -1,9 +1,11 @@
 package com.br.productservice.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-public class ProductResumeDTO {
+public interface ProductResumeDTO {
+    Long getId();
+    String getName();
+    Double getPrice();
+    Integer getQuantity();
+    String getDescription();
+    String getCreatedAt();
+    String getUpdatedAt();
 }

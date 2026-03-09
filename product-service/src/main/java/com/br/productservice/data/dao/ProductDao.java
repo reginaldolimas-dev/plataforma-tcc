@@ -20,8 +20,8 @@ public interface ProductDao extends JpaRepository<ProductEntity, Long> {
                 p.description as description,
                 p.price as price,
                 p.quantity as quantity,
-                p.createdAt as createdAt,
-                p.updatedAt as updatedAt         
+                p.created_at as createdAt,
+                p.updated_at as updatedAt         
                 FROM product p
             """,
             countQuery = """
