@@ -34,7 +34,7 @@ public class CustomerRepository {
     }
 
     public void delete(Long id) {
-        if (id != null) {
+        if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
         dao.softDeleteById(id);

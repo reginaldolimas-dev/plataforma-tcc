@@ -7,9 +7,12 @@ import com.br.customerservice.dto.CustomerUpdateDTO;
 import com.br.customerservice.model.entity.CustomerEntity;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 @Service
 @AllArgsConstructor
@@ -17,9 +20,13 @@ public class CustomerService {
 
     private final CustomerRepository repository;
 
+    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
+
     @Transactional
     public void save(CustomerCreateDTO customer) {
+        log.info("Creating customer");
         repository.save(customer);
+        log.info("Customer created");
     }
 
     public Page<CustomerResumeDTO> findAllPaginated(Pageable pageable) {
@@ -28,7 +35,9 @@ public class CustomerService {
 
     @Transactional
     public void delete(Long id) {
+        log.info("Deleting customer with id: {}", id);
         repository.delete(id);
+        log.info("Customer deleted with id: {}", id);
     }
 
     public CustomerEntity findById(Long id) {
@@ -41,7 +50,9 @@ public class CustomerService {
 
         CustomerEntity entity = updateEntity(customer, existingCustomer);
 
+        log.info("Updating customer with id: {}", customer.getId());
         repository.update(entity);
+        log.info("Customer updated with id: {}", customer.getId());
     }
 
     private CustomerEntity updateEntity(CustomerUpdateDTO customer, CustomerEntity existingCustomer) {
