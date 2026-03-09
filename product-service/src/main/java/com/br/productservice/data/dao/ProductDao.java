@@ -21,7 +21,7 @@ public interface ProductDao extends JpaRepository<ProductEntity, Long> {
                 p.price as price,
                 p.quantity as quantity,
                 p.created_at as createdAt,
-                p.updated_at as updatedAt         
+                p.updated_at as updatedAt
                 FROM product p
             """,
             countQuery = """
@@ -60,5 +60,11 @@ public interface ProductDao extends JpaRepository<ProductEntity, Long> {
             @Param("price") Double price,
             @Param("quantity") Integer quantity
     );
-
+    @Modifying
+    @Query(value = """
+            UPDATE product
+            SET active = false
+            WHERE id = :id
+            """, nativeQuery = true)
+    void softDeleteById(Long id);
 }

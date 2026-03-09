@@ -63,4 +63,9 @@ public class ProductService {
         }
         return existingProduct;
     }
+
+    @Transactional
+    public void delete(Long id) {
+        repository.delete(id);
+    }
 }
