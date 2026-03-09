@@ -41,5 +41,5 @@ public class CustomerEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    private boolean active;
+    private Boolean active;
 }

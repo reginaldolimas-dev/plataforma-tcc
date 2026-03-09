@@ -54,4 +54,23 @@ public interface CustomerDao extends JpaRepository<CustomerEntity, Long> {
             """, nativeQuery = true)
     void softDeleteById(@Param("id") Long id);
 
+    @Modifying
+    @Query(value = """
+            UPDATE customer
+            SET name = :name,
+                surname = :surname,
+                email = :email,
+                birth_date = :birthDate,
+                active = :active
+            WHERE id = :id
+            """, nativeQuery = true)
+    void updateCustumer(
+            @Param("id") Long id,
+            @Param("name") String name,
+            @Param("surname") String surname,
+            @Param("email") String email,
+            @Param("birthDate") LocalDate birthDate,
+            @Param("active") Boolean active
+    );
+
 }
