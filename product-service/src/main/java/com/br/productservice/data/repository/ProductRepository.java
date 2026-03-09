@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @AllArgsConstructor
 public class ProductRepository {
@@ -21,6 +23,7 @@ public class ProductRepository {
 
     public void saveProduct(ProductCreateDTO product) {
         dao.saveProduct(
+                product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
@@ -38,7 +41,7 @@ public class ProductRepository {
         );
     }
 
-    public ProductEntity findById(Long id) {
+    public ProductEntity findById(UUID id) {
         return dao.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found"));
     }
 

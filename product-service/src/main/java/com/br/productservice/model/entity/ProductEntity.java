@@ -2,23 +2,24 @@ package com.br.productservice.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Data
 @Table(name = "product")
 public class ProductEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(nullable = false, updatable = false)
+    private UUID id;
 
     @Column(nullable = false)
     private String name;
@@ -41,4 +42,16 @@ public class ProductEntity {
     private LocalDateTime updatedAt;
 
     private Boolean active;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID();
+        }
+
+        if (this.active == null) {
+            this.active = true;
+        }
+    }
+
 }

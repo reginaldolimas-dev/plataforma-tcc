@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/products")
 @AllArgsConstructor
@@ -36,7 +38,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ProductUpdateDTO product) {
+    public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody ProductUpdateDTO product) {
         product.setId(id);
         service.updateProduct(product);
         return ResponseEntity.ok().build();

@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class ProductService {
@@ -25,13 +27,18 @@ public class ProductService {
     }
     @Transactional
     public void saveProduct(ProductCreateDTO product) {
+        product.setId(generateId());
         log.info("Creating Product");
         repository.saveProduct(product);
         log.info("Product created");
     }
 
-    public ProductEntity findById(Long id) {
+    public ProductEntity findById(UUID id) {
         return repository.findById(id);
+    }
+
+    public UUID generateId() {
+        return UUID.randomUUID();
     }
 
     @Transactional

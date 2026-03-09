@@ -10,8 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
-public interface ProductDao extends JpaRepository<ProductEntity, Long> {
+public interface ProductDao extends JpaRepository<ProductEntity, UUID> {
 
     @Query(value = """
             SELECT
@@ -40,7 +42,7 @@ public interface ProductDao extends JpaRepository<ProductEntity, Long> {
             WHERE id = :id
             """, nativeQuery = true)
     void updateProduct(
-            @Param("id") Long id,
+            @Param("id") UUID id,
             @Param("name") String name,
             @Param("description") String description,
             @Param("price") Double price,
@@ -50,11 +52,12 @@ public interface ProductDao extends JpaRepository<ProductEntity, Long> {
     @Modifying
     @Query(value = """
         INSERT INTO product
-        (name, description, price, quantity)
+        (id, name, description, price, quantity)
         VALUES
-        (:name, :description, :price, :quantity)
+        (:id, :name, :description, :price, :quantity)
         """, nativeQuery = true)
     void saveProduct(
+            @Param("id") UUID id,
             @Param("name") String name,
             @Param("description") String description,
             @Param("price") Double price,
