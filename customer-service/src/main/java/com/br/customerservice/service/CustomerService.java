@@ -38,6 +38,9 @@ public class CustomerService {
 
     @Transactional
     public void delete(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
         log.info("Deleting customer with id: {}", id);
         repository.delete(id);
         log.info("Customer deleted with id: {}", id);
