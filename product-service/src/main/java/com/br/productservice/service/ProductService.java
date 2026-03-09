@@ -4,6 +4,7 @@ import com.br.productservice.data.repository.ProductRepository;
 import com.br.productservice.dto.ProductCreateDTO;
 import com.br.productservice.dto.ProductResumeDTO;
 import com.br.productservice.dto.ProductUpdateDTO;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class ProductService {
     public Page<ProductResumeDTO> findAllPaginated(Pageable pageable) {
         return repository.findAllPaginated(pageable);
     }
-
+    @Transactional
     public void saveProduct(ProductCreateDTO product) {
         log.info("Creating Product");
         repository.saveProduct(product);
