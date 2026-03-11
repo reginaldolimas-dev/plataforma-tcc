@@ -45,7 +45,7 @@ public class ProductRepository {
         return dao.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found"));
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         dao.softDeleteById(id);
     }
 }

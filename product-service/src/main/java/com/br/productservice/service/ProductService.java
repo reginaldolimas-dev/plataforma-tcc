@@ -72,7 +72,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(UUID id) {
         repository.delete(id);
     }
 }

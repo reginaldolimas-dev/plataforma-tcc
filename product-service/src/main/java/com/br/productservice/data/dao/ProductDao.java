@@ -69,5 +69,5 @@ public interface ProductDao extends JpaRepository<ProductEntity, UUID> {
             SET active = false
             WHERE id = :id
             """, nativeQuery = true)
-    void softDeleteById(Long id);
+    void softDeleteById(UUID id);
 }
