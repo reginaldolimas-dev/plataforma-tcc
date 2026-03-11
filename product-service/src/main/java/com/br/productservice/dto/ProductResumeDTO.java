@@ -1,7 +1,9 @@
 package com.br.productservice.dto;
 
+import java.util.UUID;
+
 public interface ProductResumeDTO {
-    Long getId();
+    UUID getId();
     String getName();
     Double getPrice();
     Integer getQuantity();
