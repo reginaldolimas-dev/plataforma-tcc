@@ -12,7 +12,7 @@ services:
     ports:
       - "5435:5432"
     volumes:
-      - postgres_clientes_data:/var/lib/postgresql/data
+      - postgres_cotacoes_data:/var/lib/postgresql/data
 
 volumes:
   postgres_cotacoes_data:
