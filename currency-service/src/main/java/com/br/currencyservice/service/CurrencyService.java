@@ -1,18 +1,11 @@
 package com.br.currencyservice.service;
 
-import com.br.currencyservice.data.repository.CurrencyRepository;
-import com.br.currencyservice.model.entity.CurrencyEntity;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.br.currencyservice.dto.CurrencyResponseDTO;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class CurrencyService {
-    private final CurrencyRepository repository;
+public interface CurrencyService {
+    List<CurrencyResponseDTO> getAll();
 
-    public List<CurrencyEntity> getAll() {
-        return repository.getAll();
-    }
+    CurrencyResponseDTO findByCode(String code);
 }
