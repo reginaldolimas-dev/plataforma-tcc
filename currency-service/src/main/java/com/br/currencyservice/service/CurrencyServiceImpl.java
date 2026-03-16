@@ -80,6 +80,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 
         entity.setCode(code);
         entity.setValue(Double.valueOf(external.getBid()));
+        entity.setUpdatedAt(LocalDateTime.now());
 
         repository.save(entity);
     }
