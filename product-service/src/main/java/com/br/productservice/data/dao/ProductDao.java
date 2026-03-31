@@ -1,5 +1,6 @@
 package com.br.productservice.data.dao;
 
+import com.br.productservice.dto.ProductFilterDTO;
 import com.br.productservice.dto.ProductResumeDTO;
 import com.br.productservice.model.entity.ProductEntity;
 import org.springframework.data.domain.Page;
@@ -25,12 +26,19 @@ public interface ProductDao extends JpaRepository<ProductEntity, UUID> {
                 p.created_at as createdAt,
                 p.updated_at as updatedAt
                 FROM product p
+                WHERE (CAST(:#{#filter.name} AS TEXT) IS NULL OR p.name ILIKE CONCAT('%', CAST(:#{#filter.name} AS TEXT), '%')) AND
+                    p.active = true
             """,
             countQuery = """
-                            SELECT count(*) FROM product p
+                                SELECT COUNT(*)
+                                    FROM product p
+                                    WHERE
+                                        (CAST(:#{#filter.name} AS TEXT) IS NULL
+                                            OR p.name ILIKE CONCAT('%', CAST(:#{#filter.name} AS TEXT), '%'))
+                                        AND p.active = true
                             """,
             nativeQuery = true)
-    Page<ProductResumeDTO> findAllPaginated(Pageable pageable);
+    Page<ProductResumeDTO> findAllPaginated(@Param("filter") ProductFilterDTO filter, Pageable pageable);
 
     @Modifying
     @Query(value = """

@@ -2,6 +2,7 @@ package com.br.productservice.data.repository;
 
 import com.br.productservice.data.dao.ProductDao;
 import com.br.productservice.dto.ProductCreateDTO;
+import com.br.productservice.dto.ProductFilterDTO;
 import com.br.productservice.dto.ProductResumeDTO;
 import com.br.productservice.model.entity.ProductEntity;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,8 +18,8 @@ import java.util.UUID;
 public class ProductRepository {
     private final ProductDao dao;
 
-    public Page<ProductResumeDTO> findAllPaginated(Pageable pageable) {
-        return dao.findAllPaginated(pageable);
+    public Page<ProductResumeDTO> findAllPaginated(ProductFilterDTO filter, Pageable pageable) {
+        return dao.findAllPaginated(filter, pageable);
     }
 
     public void saveProduct(ProductCreateDTO product) {

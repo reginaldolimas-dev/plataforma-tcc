@@ -2,6 +2,7 @@ package com.br.productservice.service;
 
 import com.br.productservice.data.repository.ProductRepository;
 import com.br.productservice.dto.ProductCreateDTO;
+import com.br.productservice.dto.ProductFilterDTO;
 import com.br.productservice.dto.ProductResumeDTO;
 import com.br.productservice.dto.ProductUpdateDTO;
 import com.br.productservice.model.entity.ProductEntity;
@@ -22,8 +23,11 @@ public class ProductService {
 
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
-    public Page<ProductResumeDTO> findAllPaginated(Pageable pageable) {
-        return repository.findAllPaginated(pageable);
+    public Page<ProductResumeDTO> findAllPaginated(ProductFilterDTO filter, Pageable pageable) {
+        log.info("Finding all products paginated");
+        Page<ProductResumeDTO> result = repository.findAllPaginated(filter, pageable);
+        log.info("Found {} products", result.getTotalElements());
+        return result;
     }
     @Transactional
     public void saveProduct(ProductCreateDTO product) {
@@ -34,7 +38,10 @@ public class ProductService {
     }
 
     public ProductEntity findById(UUID id) {
-        return repository.findById(id);
+        log.info("Finding Product with id: {}", id);
+        ProductEntity product = repository.findById(id);
+        log.info("Product found with id: {}", id);
+        return product;
     }
 
     public UUID generateId() {
@@ -73,6 +80,8 @@ public class ProductService {
 
     @Transactional
     public void delete(UUID id) {
+        log.info("Deleting Product with id: {}", id);
         repository.delete(id);
+        log.info("Product deleted with id: {}", id);
     }
 }

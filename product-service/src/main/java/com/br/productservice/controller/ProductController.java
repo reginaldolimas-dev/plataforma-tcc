@@ -1,6 +1,7 @@
 package com.br.productservice.controller;
 
 import com.br.productservice.dto.ProductCreateDTO;
+import com.br.productservice.dto.ProductFilterDTO;
 import com.br.productservice.dto.ProductResumeDTO;
 import com.br.productservice.dto.ProductUpdateDTO;
 import com.br.productservice.service.ProductService;
@@ -27,8 +28,8 @@ public class ProductController {
     private final ProductService service;
 
     @GetMapping
-    public ResponseEntity<Page<ProductResumeDTO>> findAllPaginated(Pageable pageable) {
-        return ResponseEntity.ok(service.findAllPaginated(pageable));
+    public ResponseEntity<Page<ProductResumeDTO>> findAllPaginated(ProductFilterDTO filter, Pageable pageable) {
+        return ResponseEntity.ok(service.findAllPaginated(filter, pageable));
     }
 
     @PostMapping
