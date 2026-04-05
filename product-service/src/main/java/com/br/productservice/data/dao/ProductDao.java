@@ -16,30 +16,6 @@ import java.util.UUID;
 @Repository
 public interface ProductDao extends JpaRepository<ProductEntity, UUID> {
 
-    @Query(value = """
-            SELECT
-                p.id as id,
-                p.name  as name,
-                p.description as description,
-                p.price as price,
-                p.quantity as quantity,
-                p.created_at as createdAt,
-                p.updated_at as updatedAt
-                FROM product p
-                WHERE (CAST(:#{#filter.name} AS TEXT) IS NULL OR p.name ILIKE CONCAT('%', CAST(:#{#filter.name} AS TEXT), '%')) AND
-                    p.active = true
-            """,
-            countQuery = """
-                                SELECT COUNT(*)
-                                    FROM product p
-                                    WHERE
-                                        (CAST(:#{#filter.name} AS TEXT) IS NULL
-                                            OR p.name ILIKE CONCAT('%', CAST(:#{#filter.name} AS TEXT), '%'))
-                                        AND p.active = true
-                            """,
-            nativeQuery = true)
-    Page<ProductResumeDTO> findAllPaginated(@Param("filter") ProductFilterDTO filter, Pageable pageable);
-
     @Modifying
     @Query(value = """
             UPDATE product
@@ -71,6 +47,7 @@ public interface ProductDao extends JpaRepository<ProductEntity, UUID> {
             @Param("price") Double price,
             @Param("quantity") Integer quantity
     );
+
     @Modifying
     @Query(value = """
             UPDATE product
@@ -78,4 +55,14 @@ public interface ProductDao extends JpaRepository<ProductEntity, UUID> {
             WHERE id = :id
             """, nativeQuery = true)
     void softDeleteById(UUID id);
+
+    @Query("""
+        SELECT p FROM ProductEntity p
+        WHERE (:#{#filter.name} IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :#{#filter.name}, '%')))
+        AND (:#{#filter.description} IS NULL OR LOWER(p.description) LIKE LOWER(CONCAT('%', :#{#filter.description}, '%')))
+        AND (:#{#filter.minPrice} IS NULL OR p.price >= :#{#filter.minPrice})
+        AND (:#{#filter.maxPrice} IS NULL OR p.price <= :#{#filter.maxPrice})
+        AND (:#{#filter.quantity} IS NULL OR p.quantity = :#{#filter.quantity})
+    """)
+    Page<ProductEntity> findAllFiltered(ProductFilterDTO filter, Pageable pageable);
 }

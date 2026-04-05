@@ -4,8 +4,10 @@ import lombok.Value;
 
 @Value
 public class ProductFilterDTO {
-    String price;
+    Double minPrice;
+    Double maxPrice;
+    String currency;
     String name;
-    String description;
     Integer quantity;
+    String description;
 }

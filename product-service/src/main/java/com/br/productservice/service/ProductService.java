@@ -1,10 +1,12 @@
 package com.br.productservice.service;
 
+import com.br.productservice.client.CurrencyClient;
 import com.br.productservice.data.repository.ProductRepository;
 import com.br.productservice.dto.ProductCreateDTO;
 import com.br.productservice.dto.ProductFilterDTO;
 import com.br.productservice.dto.ProductResumeDTO;
 import com.br.productservice.dto.ProductUpdateDTO;
+import com.br.productservice.dto.ProductWithPricesDTO;
 import com.br.productservice.model.entity.ProductEntity;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -14,21 +16,68 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class ProductService {
     private final ProductRepository repository;
+    private final CurrencyClient currencyClient;
 
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
-    public Page<ProductResumeDTO> findAllPaginated(ProductFilterDTO filter, Pageable pageable) {
+    public Page<ProductWithPricesDTO> findAllPaginated(ProductFilterDTO filter, Pageable pageable) {
         log.info("Finding all products paginated");
-        Page<ProductResumeDTO> result = repository.findAllPaginated(filter, pageable);
+        
+        ProductFilterDTO adjustedFilter = adjustFilterForCurrency(filter);
+
+        Page<ProductResumeDTO> result = repository.findAllPaginated(adjustedFilter, pageable);
         log.info("Found {} products", result.getTotalElements());
-        return result;
+        
+        Map<String, Double> currencies = currencyClient.getAllCurrencies();
+        
+        return result.map(product -> enrichProductWithCurrencies(product, currencies));
     }
+    
+    private ProductFilterDTO adjustFilterForCurrency(ProductFilterDTO filter) {
+        if (filter.getCurrency() != null && !filter.getCurrency().equalsIgnoreCase("BRL")) {
+            Map<String, Double> currencies = currencyClient.getAllCurrencies();
+            Double rate = currencies.get(filter.getCurrency().toUpperCase());
+            
+            if (rate != null) {
+                Double adjustedMin = filter.getMinPrice() != null ? filter.getMinPrice() * rate : null;
+                Double adjustedMax = filter.getMaxPrice() != null ? filter.getMaxPrice() * rate : null;
+                
+                return new ProductFilterDTO(adjustedMin, adjustedMax, "BRL", filter.getName(), filter.getQuantity(), filter.getDescription());
+            }
+        }
+        return filter;
+    }
+
+    private ProductWithPricesDTO enrichProductWithCurrencies(ProductResumeDTO product, Map<String, Double> currencies) {
+        Map<String, Double> pricesInOtherCurrencies = new HashMap<>();
+        
+        if (product.getPrice() != null && currencies != null && !currencies.isEmpty()) {
+            for (Map.Entry<String, Double> entry : currencies.entrySet()) {
+                Double priceInCurrency = product.getPrice() / entry.getValue();
+                pricesInOtherCurrencies.put(entry.getKey(), priceInCurrency);
+            }
+        }
+        
+        return ProductWithPricesDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .quantity(product.getQuantity())
+                .description(product.getDescription())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .pricesInOtherCurrencies(pricesInOtherCurrencies)
+                .build();
+    }
+
     @Transactional
     public void saveProduct(ProductCreateDTO product) {
         product.setId(generateId());

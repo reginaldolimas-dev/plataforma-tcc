@@ -1,13 +1,19 @@
 package com.br.productservice.dto;
 
+import lombok.Builder;
+import lombok.Value;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-public interface ProductResumeDTO {
-    UUID getId();
-    String getName();
-    Double getPrice();
-    Integer getQuantity();
-    String getDescription();
-    String getCreatedAt();
-    String getUpdatedAt();
+@Value
+@Builder
+public class ProductResumeDTO {
+    UUID id;
+    String name;
+    Double price;
+    Integer quantity;
+    String description;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }
