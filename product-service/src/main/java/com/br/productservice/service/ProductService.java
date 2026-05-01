@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -35,10 +36,18 @@ public class ProductService {
 
         Page<ProductResumeDTO> result = repository.findAllPaginated(adjustedFilter, pageable);
         log.info("Found {} products", result.getTotalElements());
-        
-        Map<String, Double> currencies = currencyClient.getAllCurrencies();
-        
-        return result.map(product -> enrichProductWithCurrencies(product, currencies));
+
+        Map<String, Double> currencies;
+
+        try {
+            currencies = currencyClient.getAllCurrencies();
+        } catch (Exception e) {
+            log.warn("Failed to fetch currency data, proceeding without currency conversion: {}", e.getMessage());
+            currencies = Collections.emptyMap();
+        }
+
+        Map<String, Double> finalCurrencies = currencies;
+        return result.map(product -> enrichProductWithCurrencies(product, finalCurrencies));
     }
     
     private ProductFilterDTO adjustFilterForCurrency(ProductFilterDTO filter) {
