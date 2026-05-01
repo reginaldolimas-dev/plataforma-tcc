@@ -5,11 +5,12 @@ import com.br.productservice.dto.ProductCreateDTO;
 import com.br.productservice.dto.ProductFilterDTO;
 import com.br.productservice.dto.ProductResumeDTO;
 import com.br.productservice.model.entity.ProductEntity;
+import com.br.productservice.specs.ProductSpecs;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -20,7 +21,9 @@ public class ProductRepository {
     private final ProductDao dao;
 
     public Page<ProductResumeDTO> findAllPaginated(ProductFilterDTO filter, Pageable pageable) {
-        Page<ProductEntity> entities = dao.findAllFiltered(filter, pageable);
+        Specification<ProductEntity> spec = ProductSpecs.withFilters(filter);
+
+        Page<ProductEntity> entities = dao.findAll(spec, pageable);
         return entities.map(entity -> ProductResumeDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())
