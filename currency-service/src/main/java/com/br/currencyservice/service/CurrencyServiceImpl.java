@@ -21,6 +21,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     private static final Set<String> SUPPORTED_CODES = Set.of("USD", "EUR", "GBP", "CNY");
     private static final String EXTERNAL_URL = "https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,GBP-BRL,CNY-BRL";
+    private static final String EXTERNAL_URL_BASE = "https://economia.awesomeapi.com.br/json/last/";
 
     private final CurrencyRepository repository;
     private final RestClient restClient;
@@ -36,7 +37,18 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public CurrencyResponseDTO findByCode(String code) {
-        return null;
+        String codeFull = code + "-BRL";
+        String responseKey = code + "BRL";
+        String url = EXTERNAL_URL_BASE + codeFull;
+
+        Map<String, ExternalCurrencyDTO> response = restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(new org.springframework.core.ParameterizedTypeReference<Map<String, ExternalCurrencyDTO>>() {});
+
+        Double bid = Double.valueOf(response.get(responseKey).getBid());
+
+        return new CurrencyResponseDTO(code, bid, LocalDateTime.now());
     }
 
     @Transactional
