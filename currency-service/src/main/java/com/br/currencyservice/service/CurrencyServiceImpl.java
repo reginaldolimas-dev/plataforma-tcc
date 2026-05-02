@@ -17,16 +17,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class CurrencyServiceImpl implements CurrencyService {
 
     private static final Logger log = LoggerFactory.getLogger(CurrencyServiceImpl.class);
-
-    private static final Set<String> SUPPORTED_CODES =
-            Set.of("USD", "EUR", "GBP", "CNY");
 
     private final CurrencyRepository repository;
     private final CurrencyFetchContext fetchContext;
@@ -36,7 +32,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     public List<CurrencyResponseDTO> getAll() {
         refreshIfNeeded();
 
-        return repository.findByCodeIn(SUPPORTED_CODES).stream()
+        return repository.findByCodeIn(fetchContext.getStrategies().keySet()).stream()
                 .map(this::toResponse)
                 .toList();
     }
@@ -73,13 +69,13 @@ public class CurrencyServiceImpl implements CurrencyService {
     protected void refreshIfNeeded() {
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
 
-        long updatedToday = repository.countUpdatedToday(SUPPORTED_CODES, startOfDay);
+        long updatedToday = repository.countUpdatedToday(fetchContext.getStrategies().keySet(), startOfDay);
 
-        if (updatedToday == SUPPORTED_CODES.size()) {
+        if (updatedToday == fetchContext.getStrategies().size()) {
             return;
         }
 
-        for (String code : SUPPORTED_CODES) {
+        for (String code : fetchContext.getStrategies().keySet()) {
             CurrencyFetchStrategy strategy = fetchContext.getStrategy(code);
             fetchAndSaveCurrency(strategy, code);
         }

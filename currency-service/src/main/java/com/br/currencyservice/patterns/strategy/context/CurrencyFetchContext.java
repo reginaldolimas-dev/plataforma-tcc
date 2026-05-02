@@ -1,6 +1,7 @@
 package com.br.currencyservice.patterns.strategy.context;
 
 import com.br.currencyservice.patterns.strategy.CurrencyFetchStrategy;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
+@Getter
 public class CurrencyFetchContext {
     private final Map<String, CurrencyFetchStrategy> strategies;
 
