@@ -29,7 +29,7 @@ public class CurrencyServiceImpl implements CurrencyService {
             Set.of("USD", "EUR", "GBP", "CNY");
 
     private final CurrencyRepository repository;
-    private final CurrencyFetchContext fetchContext;  // 👈 Strategy Context
+    private final CurrencyFetchContext fetchContext;
     private final RestClient restClient;
 
     @Override
@@ -51,7 +51,26 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public CurrencyResponseDTO findByCode(String code) {
-        return null;
+        CurrencyFetchStrategy strategy = fetchContext.getStrategy(code);
+
+        String url = getString(code, strategy);
+
+        Map<String, Object> response = getStringObjectMap(url);
+
+        Double value = strategy.extractValue(response);
+
+        return new CurrencyResponseDTO(code, value, LocalDateTime.now());
+    }
+
+    private static String getString(String code, CurrencyFetchStrategy strategy) {
+        return String.format(strategy.getEndpointUrl(), code);
+    }
+
+    private Map<String, Object> getStringObjectMap(String url) {
+        return restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(new ParameterizedTypeReference<Map<String, Object>>() {});
     }
 
     @Transactional
@@ -72,12 +91,9 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     private void fetchAndSaveCurrency(CurrencyFetchStrategy strategy, String code) {
         try {
-            String url = String.format(strategy.getEndpointUrl(), code);
+            String url = getString(code, strategy);
 
-            Map<String, Object> response = restClient.get()
-                    .uri(url)
-                    .retrieve()
-                    .body(new ParameterizedTypeReference<Map<String, Object>>() {});
+            Map<String, Object> response = getStringObjectMap(url);
 
             if (response == null || response.isEmpty()) {
                 throw new IllegalStateException("Empty response for " + code);
