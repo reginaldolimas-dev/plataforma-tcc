@@ -2,18 +2,18 @@ version: "3.9"
 
 services:
   # Customer Service + Database
-  postgres-clientes:
+  postgres-customer:
     image: postgres:16-alpine
-    container_name: postgres-client
+    container_name: postgres-customer
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: client_db
+      POSTGRES_DB: customer_db
     ports:
       - "5433:5432"
     volumes:
-      - postgres_clientes_data:/var/lib/postgresql/data
+      - postgres_customer_data:/var/lib/postgresql/data
     networks:
       - plataforma-network
 
@@ -24,9 +24,9 @@ services:
     container_name: customer-service
     restart: unless-stopped
     depends_on:
-      - postgres-client
+      - postgres-customer
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-client:5432/client_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-customer:5432/customer_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: "123"
       SERVER_PORT: 8081
@@ -37,7 +37,7 @@ services:
 
   # Product Service + Database
 
-  postgres-produtos:
+  postgres-product:
     image: postgres:16-alpine
     container_name: postgres-product
     restart: unless-stopped
@@ -48,7 +48,7 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - postgres_produtos_data:/var/lib/postgresql/data
+      - postgres_product_data:/var/lib/postgresql/data
     networks:
       - plataforma-network
 
@@ -78,7 +78,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: cotacoes_db
+      POSTGRES_DB: currency_db
     ports:
       - "5435:5432"
     volumes:
@@ -95,7 +95,7 @@ services:
     depends_on:
       - postgres-currency
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-currency:5432/cotacoes_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-currency:5432/currency_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: "123"
       SERVER_PORT: 8080
@@ -105,9 +105,9 @@ services:
       - plataforma-network
 
 volumes:
-  postgres_clientes_data:
-  postgres_produtos_data:
-  postgres_cotacoes_data:
+  postgres_customer_data:
+  postgres_product_data:
+  postgres_currency_data:
 
 networks:
   plataforma-network:
