@@ -71,7 +71,7 @@ services:
       - plataforma-network
 
   # Currency Service + Database
-  postgres-cotacoes:
+  postgres-currency:
     image: postgres:16-alpine
     container_name: postgres-currency
     restart: unless-stopped
