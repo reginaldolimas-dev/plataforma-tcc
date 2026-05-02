@@ -51,15 +51,11 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public CurrencyResponseDTO findByCode(String code) {
-        CurrencyFetchStrategy strategy = fetchContext.getStrategy(code);
+        refreshIfNeeded();
 
-        String url = getString(code, strategy);
+        CurrencyEntity entidade = repository.findById(code).orElseThrow(() -> new IllegalStateException("Currency not found"));
 
-        Map<String, Object> response = getStringObjectMap(url);
-
-        Double value = strategy.extractValue(response);
-
-        return new CurrencyResponseDTO(code, value, LocalDateTime.now());
+        return new CurrencyResponseDTO(code, entidade.getValue(), LocalDateTime.now());
     }
 
     private static String getString(String code, CurrencyFetchStrategy strategy) {
