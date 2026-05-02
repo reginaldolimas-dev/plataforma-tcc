@@ -4,12 +4,12 @@ services:
   # Customer Service + Database
   postgres-clientes:
     image: postgres:16-alpine
-    container_name: postgres-clientes
+    container_name: postgres-client
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: clientes_db
+      POSTGRES_DB: client_db
     ports:
       - "5433:5432"
     volumes:
@@ -24,9 +24,9 @@ services:
     container_name: customer-service
     restart: unless-stopped
     depends_on:
-      - postgres-clientes
+      - postgres-client
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-clientes:5432/clientes_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-client:5432/client_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: "123"
       SERVER_PORT: 8081
@@ -39,12 +39,12 @@ services:
 
   postgres-produtos:
     image: postgres:16-alpine
-    container_name: postgres-produtos
+    container_name: postgres-product
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: produtos_db
+      POSTGRES_DB: product_db
     ports:
       - "5434:5432"
     volumes:
@@ -59,9 +59,9 @@ services:
     container_name: product-service
     restart: unless-stopped
     depends_on:
-      - postgres-produtos
+      - postgres-product
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-produtos:5432/produtos_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-product:5432/product_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: "123"
       SERVER_PORT: 8082
@@ -73,7 +73,7 @@ services:
   # Currency Service + Database
   postgres-cotacoes:
     image: postgres:16-alpine
-    container_name: postgres-cotacoes
+    container_name: postgres-currency
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -82,7 +82,7 @@ services:
     ports:
       - "5435:5432"
     volumes:
-      - postgres_cotacoes_data:/var/lib/postgresql/data
+      - postgres_currency_data:/var/lib/postgresql/data
     networks:
       - plataforma-network
 
@@ -93,9 +93,9 @@ services:
     container_name: currency-service
     restart: unless-stopped
     depends_on:
-      - postgres-cotacoes
+      - postgres-currency
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-cotacoes:5432/cotacoes_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-currency:5432/cotacoes_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: "123"
       SERVER_PORT: 8080
