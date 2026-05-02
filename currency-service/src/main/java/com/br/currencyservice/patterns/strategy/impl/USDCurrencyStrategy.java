@@ -18,7 +18,7 @@ public class USDCurrencyStrategy implements CurrencyFetchStrategy {
 
     @Override
     public Double extractValue(Map<String, Object> response) {
-        Map<String, Object> usdData = (Map<String, Object>) response.get("USDBRL");
-        return Double.valueOf((String) usdData.get("bid"));
+        Map<String, Object> data = (Map<String, Object>) response.get("USDBRL");
+        return Double.valueOf((String) data.get("bid"));
     }
 }

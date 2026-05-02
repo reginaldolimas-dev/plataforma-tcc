@@ -19,7 +19,7 @@ public class CNYCurrencyStrategy implements CurrencyFetchStrategy {
 
     @Override
     public Double extractValue(Map<String, Object> response) {
-        Map<String, Object> eurData = (Map<String, Object>) response.get("CNYBRL");
-        return Double.valueOf((String) eurData.get("bid"));
+        Map<String, Object> data = (Map<String, Object>) response.get("CNYBRL");
+        return Double.valueOf((String) data.get("bid"));
     }
 }
