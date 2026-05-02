@@ -2,10 +2,14 @@ package com.br.currencyservice.service;
 
 import com.br.currencyservice.data.repository.CurrencyRepository;
 import com.br.currencyservice.dto.CurrencyResponseDTO;
-import com.br.currencyservice.dto.ExternalCurrencyDTO;
 import com.br.currencyservice.model.entity.CurrencyEntity;
+import com.br.currencyservice.patterns.strategy.CurrencyFetchStrategy;
+import com.br.currencyservice.patterns.strategy.context.CurrencyFetchContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -19,11 +23,13 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CurrencyServiceImpl implements CurrencyService {
 
-    private static final Set<String> SUPPORTED_CODES = Set.of("USD", "EUR", "GBP", "CNY");
-    private static final String EXTERNAL_URL = "https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,GBP-BRL,CNY-BRL";
-    private static final String EXTERNAL_URL_BASE = "https://economia.awesomeapi.com.br/json/last/";
+    private static final Logger log = LoggerFactory.getLogger(CurrencyServiceImpl.class);
+
+    private static final Set<String> SUPPORTED_CODES =
+            Set.of("USD", "EUR", "GBP", "CNY");
 
     private final CurrencyRepository repository;
+    private final CurrencyFetchContext fetchContext;  // 👈 Strategy Context
     private final RestClient restClient;
 
     @Override
@@ -35,20 +41,17 @@ public class CurrencyServiceImpl implements CurrencyService {
                 .toList();
     }
 
+    private CurrencyResponseDTO toResponse(CurrencyEntity currencyEntity) {
+        return new CurrencyResponseDTO(
+                currencyEntity.getCode(),
+                currencyEntity.getValue(),
+                currencyEntity.getUpdatedAt()
+        );
+    }
+
     @Override
     public CurrencyResponseDTO findByCode(String code) {
-        String codeFull = code + "-BRL";
-        String responseKey = code + "BRL";
-        String url = EXTERNAL_URL_BASE + codeFull;
-
-        Map<String, ExternalCurrencyDTO> response = restClient.get()
-                .uri(url)
-                .retrieve()
-                .body(new org.springframework.core.ParameterizedTypeReference<Map<String, ExternalCurrencyDTO>>() {});
-
-        Double bid = Double.valueOf(response.get(responseKey).getBid());
-
-        return new CurrencyResponseDTO(code, bid, LocalDateTime.now());
+        return null;
     }
 
     @Transactional
@@ -61,47 +64,52 @@ public class CurrencyServiceImpl implements CurrencyService {
             return;
         }
 
-        Map<String, ExternalCurrencyDTO> response = restClient.get()
-                .uri(EXTERNAL_URL)
-                .retrieve()
-                .body(new org.springframework.core.ParameterizedTypeReference<Map<String, ExternalCurrencyDTO>>() {});
-
-        if (response == null || response.isEmpty()) {
-            throw new IllegalStateException("Failed to fetch currency data from external API");
+        for (String code : SUPPORTED_CODES) {
+            CurrencyFetchStrategy strategy = fetchContext.getStrategy(code);
+            fetchAndSaveCurrency(strategy, code);
         }
-
-        saveCurrency(response, "USD");
-        saveCurrency(response, "EUR");
-        saveCurrency(response, "GBP");
-        saveCurrency(response, "CNY");
     }
 
-    private void saveCurrency(Map<String, ExternalCurrencyDTO> response, String code) {
+    private void fetchAndSaveCurrency(CurrencyFetchStrategy strategy, String code) {
+        try {
+            String url = String.format(strategy.getEndpointUrl(), code);
 
-        String pair = code + "BRL";
+            Map<String, Object> response = restClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<Map<String, Object>>() {});
 
-        ExternalCurrencyDTO external = response.get(pair);
+            if (response == null || response.isEmpty()) {
+                throw new IllegalStateException("Empty response for " + code);
+            }
 
+            Double value = strategy.extractValue(response);
 
-        if (external == null || external.getBid() == null) {
-            throw new IllegalStateException("Currency not returned by external API: " + code);
+            if (value == null) {
+                throw new IllegalStateException("Could not extract value for " + code);
+            }
+
+            saveCurrency(code, value);
+
+        } catch (Exception e) {
+            Double fallback = strategy.getFallbackValue();
+            if (fallback != null) {
+                saveCurrency(code, fallback);
+                log.warn("Using fallback value for {}: {}", code, fallback);
+            } else {
+                throw new IllegalStateException("Failed to fetch " + code, e);
+            }
         }
+    }
 
+    private void saveCurrency(String code, Double value) {
         CurrencyEntity entity = repository.findById(code)
                 .orElseGet(CurrencyEntity::new);
 
         entity.setCode(code);
-        entity.setValue(Double.valueOf(external.getBid()));
+        entity.setValue(value);
         entity.setUpdatedAt(LocalDateTime.now());
 
         repository.save(entity);
-    }
-
-    private CurrencyResponseDTO toResponse(CurrencyEntity entity) {
-        return new CurrencyResponseDTO(
-                entity.getCode(),
-                entity.getValue(),
-                entity.getUpdatedAt()
-        );
     }
 }
