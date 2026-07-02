@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/customer")
+@RequestMapping("api/customers")
 public class CustomerController {
 
     private final CustomerService service;

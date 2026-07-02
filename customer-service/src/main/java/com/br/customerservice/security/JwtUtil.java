@@ -22,12 +22,12 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String gerarToken(String email) {
+    public String gerarToken(String login) {
         Date agora = new Date();
         Date expiracao = new Date(agora.getTime() + expiration);
 
         return Jwts.builder()
-                .subject(email)
+                .subject(login)
                 .issuedAt(agora)
                 .expiration(expiracao)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

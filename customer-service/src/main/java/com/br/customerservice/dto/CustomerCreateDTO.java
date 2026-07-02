@@ -12,5 +12,5 @@ public class CustomerCreateDTO {
     private String surname;
     private String email;
     private LocalDate birthDate;
-    private Boolean active;
+    private Boolean active = true;
 }

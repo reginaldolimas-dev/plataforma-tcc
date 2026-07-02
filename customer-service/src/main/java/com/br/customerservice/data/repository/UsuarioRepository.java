@@ -1,15 +1,12 @@
 package com.br.customerservice.data.repository;
 
 import com.br.customerservice.data.dao.UsuarioDao;
-import com.br.customerservice.dto.UsuarioResponse;
 import com.br.customerservice.model.entity.UsuarioEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.nio.channels.FileChannel;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

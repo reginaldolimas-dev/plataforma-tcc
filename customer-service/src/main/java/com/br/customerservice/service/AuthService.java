@@ -31,7 +31,7 @@ public class AuthService {
         var usuario = usuarioRepository.findByUsuarioLogin(request.usuarioLogin())
                 .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas"));
 
-        String token = jwtUtil.gerarToken(usuario.getEmail());
+        String token = jwtUtil.gerarToken(usuario.getUsuarioLogin());
 
         var usuarioResponse = new UsuarioResponse(
                 usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getUsuarioLogin(), usuario.getRole().name()
