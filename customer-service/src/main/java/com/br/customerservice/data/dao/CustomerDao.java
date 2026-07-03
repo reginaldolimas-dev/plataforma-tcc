@@ -1,10 +1,13 @@
 package com.br.customerservice.data.dao;
 
+import com.br.customerservice.dto.CustomerFilterDTO;
 import com.br.customerservice.dto.CustomerResumeDTO;
 import com.br.customerservice.model.entity.CustomerEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,23 +16,15 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 
 @Repository
-public interface CustomerDao extends JpaRepository<CustomerEntity, Long> {
+public interface CustomerDao extends JpaRepository<CustomerEntity, Long>, JpaSpecificationExecutor<CustomerEntity> {
 
-    @Query(value = """
-            SELECT
-               c.id as id,
-               c.name as name,
-               c.surname as surname,
-               c.email as email,
-               c.birth_date as birthDate,
-               c.active as active
-            FROM customer c
-            """,
-            countQuery = """
-                            SELECT count(*) FROM customer c
-                        """,
-            nativeQuery = true)
-    Page<CustomerResumeDTO> findAllPaginated(Pageable pageable);
+    default <R> Page<R> findBySpec(
+            Specification<CustomerEntity> spec,
+            Pageable pageable,
+            Class<R> projection
+    ) {
+        return findBy(spec, query -> query.as(projection).page(pageable));
+    }
 
     @Modifying
     @Query(value = """

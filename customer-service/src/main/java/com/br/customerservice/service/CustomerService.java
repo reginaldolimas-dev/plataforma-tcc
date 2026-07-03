@@ -2,6 +2,7 @@ package com.br.customerservice.service;
 
 import com.br.customerservice.data.repository.CustomerRepository;
 import com.br.customerservice.dto.CustomerCreateDTO;
+import com.br.customerservice.dto.CustomerFilterDTO;
 import com.br.customerservice.dto.CustomerResumeDTO;
 import com.br.customerservice.dto.CustomerUpdateDTO;
 import com.br.customerservice.model.entity.CustomerEntity;
@@ -29,9 +30,9 @@ public class CustomerService {
         log.info("Customer created");
     }
 
-    public Page<CustomerResumeDTO> findAllPaginated(Pageable pageable) {
+    public Page<CustomerResumeDTO> findAllPaginated(CustomerFilterDTO filter, Pageable pageable) {
         log.info("Finding all customers paginated");
-        Page<CustomerResumeDTO> modelos = repository.findAllPaginated(pageable);
+        Page<CustomerResumeDTO> modelos = repository.findAllPaginated(filter, pageable);
         log.info("Customers found");
         return modelos;
     }

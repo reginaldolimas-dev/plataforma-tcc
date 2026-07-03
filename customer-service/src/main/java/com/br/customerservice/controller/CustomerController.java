@@ -1,6 +1,7 @@
 package com.br.customerservice.controller;
 
 import com.br.customerservice.dto.CustomerCreateDTO;
+import com.br.customerservice.dto.CustomerFilterDTO;
 import com.br.customerservice.dto.CustomerResumeDTO;
 import com.br.customerservice.dto.CustomerUpdateDTO;
 import com.br.customerservice.service.CustomerService;
@@ -25,8 +26,8 @@ public class CustomerController {
     private final CustomerService service;
 
     @GetMapping
-    public ResponseEntity<Page<CustomerResumeDTO>> findAllPaginated(Pageable pageable) {
-        return ResponseEntity.ok(service.findAllPaginated(pageable));
+    public ResponseEntity<Page<CustomerResumeDTO>> findAllPaginated(CustomerFilterDTO filter, Pageable pageable) {
+        return ResponseEntity.ok(service.findAllPaginated(filter, pageable));
     }
 
     @PostMapping

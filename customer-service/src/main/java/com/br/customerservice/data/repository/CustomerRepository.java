@@ -2,12 +2,15 @@ package com.br.customerservice.data.repository;
 
 import com.br.customerservice.data.dao.CustomerDao;
 import com.br.customerservice.dto.CustomerCreateDTO;
+import com.br.customerservice.dto.CustomerFilterDTO;
 import com.br.customerservice.dto.CustomerResumeDTO;
+import com.br.customerservice.infra.specs.CustomerSpecs;
 import com.br.customerservice.model.entity.CustomerEntity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,8 +29,9 @@ public class CustomerRepository {
                 );
     }
 
-    public Page<CustomerResumeDTO> findAllPaginated(Pageable pageable) {
-        return dao.findAllPaginated(pageable);
+    public Page<CustomerResumeDTO> findAllPaginated(CustomerFilterDTO filter, Pageable pageable) {
+        var spec = CustomerSpecs.montarConsulta(filter);
+        return dao.findBySpec(spec, pageable, CustomerResumeDTO.class);
     }
 
     public void delete(Long id) {
