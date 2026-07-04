@@ -34,8 +34,8 @@ public class CurrencyClient {
                     new ParameterizedTypeReference<ApiResponse<List<CurrencyResponseDTO>>>() {}
             );
 
-            if (response.getBody() != null && response.getBody().getData() != null) {
-                return response.getBody().getData().stream()
+            if (response.getBody() != null && response.getBody().data() != null) {
+                return response.getBody().data().stream()
                         .collect(Collectors.toMap(CurrencyResponseDTO::getCode, CurrencyResponseDTO::getValue));
             }
         } catch (Exception e) {
