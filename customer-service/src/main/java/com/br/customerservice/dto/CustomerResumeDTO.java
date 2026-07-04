@@ -1,10 +1,11 @@
 package com.br.customerservice.dto;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public interface CustomerResumeDTO {
 
-    Long getId();
+    UUID getId();
 
     String getName();
 

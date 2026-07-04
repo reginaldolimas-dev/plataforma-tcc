@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 
 @Service
 @AllArgsConstructor
@@ -38,7 +40,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(UUID id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
         }
@@ -47,7 +49,7 @@ public class CustomerService {
         log.info("Customer deleted with id: {}", id);
     }
 
-    public CustomerEntity findById(Long id) {
+    public CustomerEntity findById(UUID id) {
         return repository.findById(id);
     }
 

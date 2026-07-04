@@ -14,9 +14,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Repository
-public interface CustomerDao extends JpaRepository<CustomerEntity, Long>, JpaSpecificationExecutor<CustomerEntity> {
+public interface CustomerDao extends JpaRepository<CustomerEntity, UUID>, JpaSpecificationExecutor<CustomerEntity> {
 
     default <R> Page<R> findBySpec(
             Specification<CustomerEntity> spec,
@@ -28,26 +29,11 @@ public interface CustomerDao extends JpaRepository<CustomerEntity, Long>, JpaSpe
 
     @Modifying
     @Query(value = """
-            INSERT INTO customer
-            (name, surname, email, birth_date, active)
-            VALUES
-            (:name, :surname, :email, :birthDate, :active)
-            """, nativeQuery = true)
-    void insertCustomer(
-            @Param("name") String name,
-            @Param("surname") String surname,
-            @Param("email") String email,
-            @Param("birthDate") LocalDate birthDate,
-            @Param("active") boolean active
-    );
-
-    @Modifying
-    @Query(value = """
             UPDATE customer
             SET active = false
             WHERE id = :id
             """, nativeQuery = true)
-    void softDeleteById(@Param("id") Long id);
+    void softDeleteById(@Param("id") UUID id);
 
     @Modifying
     @Query(value = """
@@ -60,7 +46,7 @@ public interface CustomerDao extends JpaRepository<CustomerEntity, Long>, JpaSpe
             WHERE id = :id
             """, nativeQuery = true)
     void updateCustumer(
-            @Param("id") Long id,
+            @Param("id") UUID id,
             @Param("name") String name,
             @Param("surname") String surname,
             @Param("email") String email,

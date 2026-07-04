@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @AllArgsConstructor
 public class CustomerRepository {
@@ -20,13 +22,12 @@ public class CustomerRepository {
     private final CustomerDao dao;
 
     public void save(CustomerCreateDTO customer) {
-        dao.insertCustomer(
-                customer.getName(),
-                customer.getSurname(),
-                customer.getEmail(),
-                customer.getBirthDate(),
-                customer.getActive()
-                );
+        CustomerEntity entity = new CustomerEntity();
+        entity.setName(customer.getName());
+        entity.setSurname(customer.getSurname());
+        entity.setEmail(customer.getEmail());
+        entity.setBirthDate(customer.getBirthDate());
+        dao.save(entity);
     }
 
     public Page<CustomerResumeDTO> findAllPaginated(CustomerFilterDTO filter, Pageable pageable) {
@@ -34,7 +35,7 @@ public class CustomerRepository {
         return dao.findBySpec(spec, pageable, CustomerResumeDTO.class);
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         dao.softDeleteById(id);
     }
 
@@ -49,7 +50,7 @@ public class CustomerRepository {
                 );
     }
 
-    public CustomerEntity findById(Long id) {
+    public CustomerEntity findById(UUID id) {
         return dao.findById(id).orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
     }
 }
