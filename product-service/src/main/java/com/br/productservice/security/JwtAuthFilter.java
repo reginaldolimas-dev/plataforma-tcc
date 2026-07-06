@@ -16,11 +16,18 @@ import java.util.Map;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    private static final String H2_CONSOLE_PATH = "/h2-console";
+
     private final JwtUtil jwtUtil;
     private final ObjectMapper mapper = new ObjectMapper();
 
     public JwtAuthFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getRequestURI().startsWith(H2_CONSOLE_PATH);
     }
 
     @Override
