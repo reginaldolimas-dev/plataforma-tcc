@@ -1,0 +1,21 @@
+[ {
+  "code" : "EUR",
+  "value" : 5.89275,
+  "createdAt" : null,
+  "updatedAt" : [ 2026, 7, 7, 15, 37, 10, 770197000 ]
+}, {
+  "code" : "GBP",
+  "value" : 6.90221,
+  "createdAt" : null,
+  "updatedAt" : [ 2026, 7, 7, 15, 37, 10, 855967500 ]
+}, {
+  "code" : "USD",
+  "value" : 5.1607,
+  "createdAt" : null,
+  "updatedAt" : [ 2026, 7, 7, 15, 37, 10, 919364500 ]
+}, {
+  "code" : "CNY",
+  "value" : 0.75989931,
+  "createdAt" : null,
+  "updatedAt" : [ 2026, 7, 7, 15, 37, 10, 978625700 ]
+} ]
