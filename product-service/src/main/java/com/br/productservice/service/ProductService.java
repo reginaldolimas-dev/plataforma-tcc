@@ -136,6 +136,9 @@ public class ProductService {
         if (product.getQuantity() != null) {
             existingProduct.setQuantity(product.getQuantity());
         }
+        if (product.getActive() != null) {
+            existingProduct.setActive(product.getActive());
+        }
         return existingProduct;
     }
 

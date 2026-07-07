@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/currency")
+@RequestMapping("/currencies")
 public class CurrencyController {
     private final CurrencyService service;
     private static final Logger log = LoggerFactory.getLogger(CurrencyController.class);

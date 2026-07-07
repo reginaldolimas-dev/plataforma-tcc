@@ -20,22 +20,22 @@ public class CurrencyClient {
     private final RestTemplate restTemplate;
     private final String currencyServiceUrl;
 
-    public CurrencyClient(RestTemplate restTemplate, @Value("${currency-service.url:http://localhost:8081}") String currencyServiceUrl) {
+    public CurrencyClient(RestTemplate restTemplate, @Value("${currency-service.url:http://localhost:8080}") String currencyServiceUrl) {
         this.restTemplate = restTemplate;
         this.currencyServiceUrl = currencyServiceUrl;
     }
 
     public Map<String, Double> getAllCurrencies() {
         try {
-            ResponseEntity<ApiResponse<List<CurrencyResponseDTO>>> response = restTemplate.exchange(
+            ResponseEntity<List<CurrencyResponseDTO>> response = restTemplate.exchange(
                     currencyServiceUrl + "/currencies",
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<ApiResponse<List<CurrencyResponseDTO>>>() {}
+                    new ParameterizedTypeReference<List<CurrencyResponseDTO>>() {}
             );
 
-            if (response.getBody() != null && response.getBody().data() != null) {
-                return response.getBody().data().stream()
+            if (response.getBody() != null) {
+                return response.getBody().stream()
                         .collect(Collectors.toMap(CurrencyResponseDTO::getCode, CurrencyResponseDTO::getValue));
             }
         } catch (Exception e) {
