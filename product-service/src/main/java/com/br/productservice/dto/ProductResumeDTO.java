@@ -16,4 +16,5 @@ public class ProductResumeDTO {
     String description;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+    Boolean active;
 }

@@ -32,17 +32,20 @@ public class ProductRepository {
                 .quantity(entity.getQuantity())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
+                .active(entity.getActive())
                 .build());
     }
 
     public void saveProduct(ProductCreateDTO product) {
-        dao.saveProduct(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getQuantity()
-        );
+
+        ProductEntity entity = new ProductEntity();
+        entity.setName(product.getName());
+        entity.setDescription(product.getDescription());
+        entity.setPrice(product.getPrice());
+        entity.setQuantity(product.getQuantity());
+        entity.setActive(true);
+
+        dao.save(entity);
     }
 
     public void updateProduct(ProductEntity product) {

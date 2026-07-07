@@ -18,4 +18,5 @@ public class ProductWithPricesDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Map<String, Double> pricesInOtherCurrencies;
+    private Boolean active;
 }

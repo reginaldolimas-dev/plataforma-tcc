@@ -14,37 +14,41 @@ public class ProductSpecs {
         return (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (filters.getName() != null && !filters.getName().isBlank()) {
+            if (filters.name() != null && !filters.name().isBlank()) {
                 predicates.add(builder.like(
                     builder.upper(root.get("name")),
-                    "%" + filters.getName().toUpperCase() + "%"
+                    "%" + filters.name().toUpperCase() + "%"
                 ));
             }
 
-            if (filters.getDescription() != null && !filters.getDescription().isBlank()) {
+            if (filters.description() != null && !filters.description().isBlank()) {
                 predicates.add(builder.like(
                     builder.upper(root.get("description")),
-                    "%" + filters.getDescription().toUpperCase() + "%"
+                    "%" + filters.description().toUpperCase() + "%"
                 ));
             }
 
-            if (filters.getMinPrice() != null) {
-                predicates.add(builder.greaterThanOrEqualTo(root.get("price"), filters.getMinPrice()));
+            if (filters.minPrice() != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("price"), filters.minPrice()));
             }
 
-            if (filters.getMaxPrice() != null) {
-                predicates.add(builder.lessThanOrEqualTo(root.get("price"), filters.getMaxPrice()));
+            if (filters.maxPrice() != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("price"), filters.maxPrice()));
             }
 
-            if (filters.getQuantity() != null) {
-                predicates.add(builder.equal(root.get("quantity"), filters.getQuantity()));
+            if (filters.quantity() != null) {
+                predicates.add(builder.equal(root.get("quantity"), filters.quantity()));
             }
 
-            if (filters.getCurrency() != null && !filters.getCurrency().isBlank()) {
+            if (filters.currency() != null && !filters.currency().isBlank()) {
                 predicates.add(builder.equal(
                     builder.upper(root.get("currency")),
-                    filters.getCurrency().toUpperCase()
+                    filters.currency().toUpperCase()
                 ));
+            }
+
+            if (filters.active() != null) {
+                predicates.add(builder.equal(root.get("active"), filters.active()));
             }
 
             return builder.and(predicates.toArray(new Predicate[0]));

@@ -51,18 +51,20 @@ public class ProductService {
     }
     
     private ProductFilterDTO adjustFilterForCurrency(ProductFilterDTO filter) {
-        if (filter.getCurrency() != null && !filter.getCurrency().equalsIgnoreCase("BRL")) {
-            Map<String, Double> currencies = currencyClient.getAllCurrencies();
-            Double rate = currencies.get(filter.getCurrency().toUpperCase());
-            
-            if (rate != null) {
-                Double adjustedMin = filter.getMinPrice() != null ? filter.getMinPrice() * rate : null;
-                Double adjustedMax = filter.getMaxPrice() != null ? filter.getMaxPrice() * rate : null;
-                
-                return new ProductFilterDTO(adjustedMin, adjustedMax, "BRL", filter.getName(), filter.getQuantity(), filter.getDescription());
-            }
+        if (filter.currency() == null || filter.currency().equalsIgnoreCase("BRL")) {
+            return filter;
         }
-        return filter;
+
+        Double rate = currencyClient.getAllCurrencies().get(filter.currency().toUpperCase());
+
+        if (rate == null){
+            return filter;
+        }
+            
+        Double adjustedMin = filter.minPrice() != null ? filter.minPrice() * rate : null;
+        Double adjustedMax = filter.maxPrice() != null ? filter.maxPrice() * rate : null;
+
+        return new ProductFilterDTO(adjustedMin, adjustedMax, "BRL", filter.name(), filter.quantity(), filter.description(), filter.active());
     }
 
     private ProductWithPricesDTO enrichProductWithCurrencies(ProductResumeDTO product, Map<String, Double> currencies) {
@@ -83,6 +85,7 @@ public class ProductService {
                 .description(product.getDescription())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
+                .active(product.getActive())
                 .pricesInOtherCurrencies(pricesInOtherCurrencies)
                 .build();
     }

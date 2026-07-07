@@ -5,7 +5,6 @@ import com.br.currencyservice.dto.CurrencyResponseDTO;
 import com.br.currencyservice.model.entity.CurrencyEntity;
 import com.br.currencyservice.patterns.strategy.CurrencyFetchStrategy;
 import com.br.currencyservice.patterns.strategy.context.CurrencyFetchContext;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +64,6 @@ public class CurrencyServiceImpl implements CurrencyService {
                 .body(new ParameterizedTypeReference<Map<String, Object>>() {});
     }
 
-    @Transactional
     protected void refreshIfNeeded() {
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
 

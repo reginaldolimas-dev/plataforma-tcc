@@ -32,21 +32,6 @@ public interface ProductDao extends JpaRepository<ProductEntity, UUID>, JpaSpeci
 
     @Modifying
     @Query(value = """
-        INSERT INTO product
-        (id, name, description, price, quantity)
-        VALUES
-        (:id, :name, :description, :price, :quantity)
-        """, nativeQuery = true)
-    void saveProduct(
-            @Param("id") UUID id,
-            @Param("name") String name,
-            @Param("description") String description,
-            @Param("price") Double price,
-            @Param("quantity") Integer quantity
-    );
-
-    @Modifying
-    @Query(value = """
             UPDATE product
             SET active = false
             WHERE id = :id

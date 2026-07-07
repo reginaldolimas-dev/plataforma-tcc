@@ -1,13 +1,11 @@
 package com.br.productservice.dto;
 
-import lombok.Value;
-
-@Value
-public class ProductFilterDTO {
-    Double minPrice;
-    Double maxPrice;
-    String currency;
-    String name;
-    Integer quantity;
-    String description;
-}
+public record ProductFilterDTO(
+    Double minPrice,
+    Double maxPrice,
+    String currency,
+    String name,
+    Integer quantity,
+    String description,
+    Boolean active)
+{}
