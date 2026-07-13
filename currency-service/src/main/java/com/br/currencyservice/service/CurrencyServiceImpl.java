@@ -1,6 +1,7 @@
 package com.br.currencyservice.service;
 
 import com.br.currencyservice.data.repository.CurrencyRepository;
+import com.br.currencyservice.dto.CurrencyFilterDTO;
 import com.br.currencyservice.dto.CurrencyResponseDTO;
 import com.br.currencyservice.model.entity.CurrencyEntity;
 import com.br.currencyservice.patterns.strategy.CurrencyFetchStrategy;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +30,11 @@ public class CurrencyServiceImpl implements CurrencyService {
     private final RestClient restClient;
 
     @Override
-    public List<CurrencyResponseDTO> getAll() {
+    public List<CurrencyResponseDTO> getAll(CurrencyFilterDTO filter) {
         refreshIfNeeded();
 
         return repository.findByCodeIn(fetchContext.getStrategies().keySet()).stream()
+                .filter(l -> filter.code() == null || Objects.equals(l.getCode(), filter.code()))
                 .map(this::toResponse)
                 .toList();
     }

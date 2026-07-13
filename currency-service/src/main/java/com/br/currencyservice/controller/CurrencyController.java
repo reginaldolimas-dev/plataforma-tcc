@@ -1,5 +1,6 @@
 package com.br.currencyservice.controller;
 
+import com.br.currencyservice.dto.CurrencyFilterDTO;
 import com.br.currencyservice.dto.CurrencyResponseDTO;
 import com.br.currencyservice.service.CurrencyService;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,9 @@ public class CurrencyController {
     private static final Logger log = LoggerFactory.getLogger(CurrencyController.class);
 
     @GetMapping
-    public ResponseEntity<List<CurrencyResponseDTO>> getAll() {
+    public ResponseEntity<List<CurrencyResponseDTO>> getAll(CurrencyFilterDTO filter) {
         log.info("Receiving request to retrieve all currencies");
-        List<CurrencyResponseDTO> result = service.getAll();
+        List<CurrencyResponseDTO> result = service.getAll(filter);
         return ResponseEntity.ok(result);
     }
 
