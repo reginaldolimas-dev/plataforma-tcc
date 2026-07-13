@@ -1,9 +1,6 @@
 package com.br.productservice.controller;
 
-import com.br.productservice.dto.ProductCreateDTO;
-import com.br.productservice.dto.ProductFilterDTO;
-import com.br.productservice.dto.ProductUpdateDTO;
-import com.br.productservice.dto.ProductWithPricesDTO;
+import com.br.productservice.dto.*;
 import com.br.productservice.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -57,5 +54,10 @@ public class ProductController {
         log.info("Receiving request to delete product with id: {}", id);
         service.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/count")
+    public CountDTO count() {
+        return service.count();
     }
 }

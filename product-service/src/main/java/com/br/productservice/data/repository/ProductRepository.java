@@ -1,6 +1,7 @@
 package com.br.productservice.data.repository;
 
 import com.br.productservice.data.dao.ProductDao;
+import com.br.productservice.dto.CountDTO;
 import com.br.productservice.dto.ProductCreateDTO;
 import com.br.productservice.dto.ProductFilterDTO;
 import com.br.productservice.dto.ProductResumeDTO;
@@ -64,5 +65,10 @@ public class ProductRepository {
 
     public void delete(UUID id) {
         dao.softDeleteById(id);
+    }
+
+    public CountDTO count() {
+        long total = dao.countByActiveTrue();
+        return new CountDTO(total);
     }
 }

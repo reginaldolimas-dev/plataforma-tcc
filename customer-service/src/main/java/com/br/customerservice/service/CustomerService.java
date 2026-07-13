@@ -1,10 +1,7 @@
 package com.br.customerservice.service;
 
 import com.br.customerservice.data.repository.CustomerRepository;
-import com.br.customerservice.dto.CustomerCreateDTO;
-import com.br.customerservice.dto.CustomerFilterDTO;
-import com.br.customerservice.dto.CustomerResumeDTO;
-import com.br.customerservice.dto.CustomerUpdateDTO;
+import com.br.customerservice.dto.*;
 import com.br.customerservice.model.entity.CustomerEntity;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -82,5 +79,9 @@ public class CustomerService {
         }
 
         return existingCustomer;
+    }
+
+    public CountDTO count() {
+        return repository.count();
     }
 }

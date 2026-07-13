@@ -1,6 +1,7 @@
 package com.br.customerservice.data.repository;
 
 import com.br.customerservice.data.dao.CustomerDao;
+import com.br.customerservice.dto.CountDTO;
 import com.br.customerservice.dto.CustomerCreateDTO;
 import com.br.customerservice.dto.CustomerFilterDTO;
 import com.br.customerservice.dto.CustomerResumeDTO;
@@ -52,5 +53,10 @@ public class CustomerRepository {
 
     public CustomerEntity findById(UUID id) {
         return dao.findById(id).orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
+    }
+
+    public CountDTO count() {
+        long value = dao.countByActiveTrue();
+        return new CountDTO(value);
     }
 }

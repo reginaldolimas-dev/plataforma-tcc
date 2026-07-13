@@ -54,4 +54,5 @@ public interface CustomerDao extends JpaRepository<CustomerEntity, UUID>, JpaSpe
             @Param("active") Boolean active
     );
 
+    long countByActiveTrue();
 }

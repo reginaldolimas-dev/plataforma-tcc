@@ -2,11 +2,7 @@ package com.br.productservice.service;
 
 import com.br.productservice.client.CurrencyClient;
 import com.br.productservice.data.repository.ProductRepository;
-import com.br.productservice.dto.ProductCreateDTO;
-import com.br.productservice.dto.ProductFilterDTO;
-import com.br.productservice.dto.ProductResumeDTO;
-import com.br.productservice.dto.ProductUpdateDTO;
-import com.br.productservice.dto.ProductWithPricesDTO;
+import com.br.productservice.dto.*;
 import com.br.productservice.model.entity.ProductEntity;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -147,5 +143,9 @@ public class ProductService {
         log.info("Deleting Product with id: {}", id);
         repository.delete(id);
         log.info("Product deleted with id: {}", id);
+    }
+
+    public CountDTO count() {
+        return repository.count();
     }
 }

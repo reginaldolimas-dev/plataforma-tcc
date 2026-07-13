@@ -38,4 +38,5 @@ public interface ProductDao extends JpaRepository<ProductEntity, UUID>, JpaSpeci
             """, nativeQuery = true)
     void softDeleteById(UUID id);
 
+    long countByActiveTrue();
 }

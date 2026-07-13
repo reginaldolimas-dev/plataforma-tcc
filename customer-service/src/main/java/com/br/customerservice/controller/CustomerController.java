@@ -1,9 +1,6 @@
 package com.br.customerservice.controller;
 
-import com.br.customerservice.dto.CustomerCreateDTO;
-import com.br.customerservice.dto.CustomerFilterDTO;
-import com.br.customerservice.dto.CustomerResumeDTO;
-import com.br.customerservice.dto.CustomerUpdateDTO;
+import com.br.customerservice.dto.*;
 import com.br.customerservice.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -49,5 +46,10 @@ public class CustomerController {
         customer.setId(id);
         service.update(customer);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/count")
+    public CountDTO count(){
+        return service.count();
     }
 }
